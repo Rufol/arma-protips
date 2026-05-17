@@ -253,6 +253,7 @@ let selCat      = "all";
 let currentUser = null;
 let editingTipId  = null;
 let adminSelCat   = "all";
+let addingNewTip  = false;
 
 window.showView = function(v) {
   document.getElementById("tips-view").style.display = v === "tips" ? "" : "none";
@@ -384,7 +385,19 @@ async function renderAdmin() {
     <button class="${adminSelCat==='all'?'active':''}" onclick="setAdminCat('all')">Wszystkie (${allTips.length})</button>
     ${CATS.map(c => { const n = allTips.filter(t=>t.cat===c).length; return n ? `<button class="${adminSelCat===c?'active':''}" onclick="setAdminCat('${escQ(c)}')" style="${adminSelCat===c?`border-color:${getColor(c)};color:${getColor(c)}`:''}">` + c + ` (${n})</button>` : ''; }).join("")}
   </div>`;
-  adiv.innerHTML = filterBar + `<p class="section-title">${visibleTips.length} tipów</p>` +
+  const newTipForm = addingNewTip ? `
+    <div class="tip-edit-row" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:14px;">
+      <textarea id="new-tip-text" rows="2" style="width:100%;margin-bottom:6px;" placeholder="Treść nowego tipu..."></textarea>
+      <div class="edit-actions">
+        <select id="new-tip-cat">
+          ${CATS.map(c=>`<option value="${escH(c)}" ${c===(adminSelCat!=="all"?adminSelCat:CATS[0])?"selected":""}>${c}</option>`).join("")}
+        </select>
+        <button class="btn btn-sm btn-primary" onclick="addTipFromAdmin()">Dodaj</button>
+        <button class="btn btn-sm btn-ghost" onclick="cancelNewTip()">Anuluj</button>
+      </div>
+    </div>` : `<button class="btn btn-ghost btn-sm" style="margin-bottom:14px;" onclick="openNewTip()">+ Dodaj tip</button>`;
+
+  adiv.innerHTML = filterBar + newTipForm + `<p class="section-title">${visibleTips.length} tipów</p>` +
     visibleTips.map(t => editingTipId === t.id ? `
       <div class="tip-edit-row">
         <textarea id="edit-text-${t.id}" rows="2" style="width:100%">${escH(t.text)}</textarea>
@@ -430,6 +443,17 @@ window.deleteTip = async function(id) {
 window.startEditTip  = function(id) { editingTipId = id; renderAdmin(); };
 window.cancelEditTip = function() { editingTipId = null; renderAdmin(); };
 window.setAdminCat   = function(c) { adminSelCat = c; editingTipId = null; renderAdmin(); };
+window.openNewTip    = function() { addingNewTip = true; editingTipId = null; renderAdmin(); setTimeout(()=>document.getElementById("new-tip-text")?.focus(), 50); };
+window.cancelNewTip  = function() { addingNewTip = false; renderAdmin(); };
+window.addTipFromAdmin = async function() {
+  const text = document.getElementById("new-tip-text")?.value.trim();
+  const cat  = document.getElementById("new-tip-cat")?.value || CATS[0];
+  if (!text) return;
+  await addDoc(collection(db,"tips"), {text, cat, createdAt: serverTimestamp()});
+  addingNewTip = false;
+  await loadTips();
+  renderAdmin();
+};
 window.saveTip = async function(id) {
   const text = document.getElementById("edit-text-"+id)?.value.trim();
   const cat  = document.getElementById("edit-cat-"+id)?.value;
