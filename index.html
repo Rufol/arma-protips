@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arma Reforger — Pro-tipy</title>
+<title>PLG | Pro-tipy Arma Reforger</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -64,14 +64,16 @@ button { font-family: var(--font-sans); cursor: pointer; font-size: 13px; border
 #content { flex: 1; padding: 22px 28px; min-width: 0; }
 
 #toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: nowrap; }
-.search-wrap { position: relative; flex: 1; max-width: 240px; }
+.search-wrap { position: relative; flex: 1; max-width: 320px; }
 .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 #search { padding-left: 34px; }
-#toolbar .tip-count { font-size: 12px; color: var(--muted); margin-left: auto; font-family: var(--font-mono); white-space: nowrap; flex-shrink: 0; }
+#toolbar .tip-count { font-size: 12px; color: var(--muted); font-family: var(--font-mono); white-space: nowrap; flex-shrink: 0; }
 
 .tip-row { display: flex; gap: 14px; align-items: flex-start; padding: 11px 10px 11px 12px; margin: 0 -12px; border-bottom: 1px solid var(--border); border-radius: var(--radius); transition: background 0.12s; position: relative; }
 .tip-row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; border-radius: 2px; background: transparent; transition: background 0.15s; }
 .tip-row:hover { background: rgba(255,255,255,.025); }
+.tip-row:hover .tip-text { color: #fff; }
+.tip-row:hover .tip-num { color: var(--border2); }
 .tip-row:hover::before { background: var(--tip-color, var(--accent)); }
 .tip-row:last-child { border-bottom: none; }
 .tip-num { font-family: var(--font-mono); font-size: 12px; color: var(--border2); min-width: 28px; padding-top: 1px; text-align: right; user-select: none; }
@@ -137,12 +139,56 @@ button { font-family: var(--font-sans); cursor: pointer; font-size: 13px; border
   #header h1 span { display: none; }
   #content { padding: 16px; }
 }
+
+#site-footer { border-top: 1px solid var(--border); padding: 14px 28px; margin-top: auto; }
+#footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+#footer-inner a { color: var(--muted); transition: color 0.15s; }
+#footer-inner a:hover { color: var(--accent); }
+.footer-sep { opacity: .4; }
+
+#plg-logo { display: flex; align-items: center; gap: 12px; }
+#plg-icon { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,.15); }
+#plg-name { font-family: var(--font-mono); font-size: 14px; color: var(--text); letter-spacing: .06em; line-height: 1.2; }
+#plg-sub { font-size: 11px; color: var(--muted); letter-spacing: .03em; }
+#header h1::before { display: none; }
+
+#hero {
+  position: relative; height: 140px; overflow: hidden;
+  background-color: #0d1117;
+  background-image:
+    linear-gradient(rgba(63,185,80,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(63,185,80,.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border-bottom: 1px solid var(--border);
+}
+#hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(13,17,23,.6) 0%, rgba(13,17,23,.2) 50%, rgba(13,17,23,.7) 100%);
+}
+#hero-content {
+  position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 28px; height: 100%;
+  display: flex; flex-direction: column; justify-content: center; gap: 6px;
+}
+#hero-tag { font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; }
+#hero-title { font-family: var(--font-mono); font-size: 22px; color: var(--text); letter-spacing: .04em; }
+#hero-desc { font-size: 13px; color: var(--muted); }
+#hero-desc a { color: var(--accent); }
+#hero-desc a:hover { text-decoration: underline; }
+
 </style>
 </head>
 <body>
 
 <div id="header">
-  <h1>ARMA REFORGER <span>// pro-tipy</span></h1>
+  <div id="plg-logo">
+      <img src="https://cdn.discordapp.com/splashes/1318533788610985985/f18d68c786233695ff37decf21ac4b6d.jpg?size=64" alt="PLG" id="plg-icon">
+      <div>
+        <div id="plg-name">POLSKA GUROM</div>
+        <div id="plg-sub">pro-tipy · Arma Reforger</div>
+      </div>
+    </div>
   <nav id="nav">
     <button class="active" onclick="showView('tips')">Tipy</button>
     <button onclick="showView('admin')" id="admin-nav-btn">Admin</button>
@@ -150,16 +196,27 @@ button { font-family: var(--font-sans); cursor: pointer; font-size: 13px; border
 </div>
 
 <div id="tips-view">
-  <div id="main-layout">
+  <div id="hero">
+  <div id="hero-overlay"></div>
+  <div id="hero-content">
+    <span id="hero-tag">🇵🇱 POLSKA GUROM</span>
+    <h2 id="hero-title">Baza wiedzy · Arma Reforger</h2>
+    <p id="hero-desc">Tipy zebrane przez graczy serwera PLG. Dołącz do nas na <a href="https://discord.gg/plg" target="_blank">Discord</a>.</p>
+  </div>
+</div>
+<div id="main-layout">
     <div id="sidebar">
       <p class="sidebar-label">Kategorie</p>
       <div id="cat-list"></div>
     </div>
     <div id="content">
       <div id="toolbar">
-        <input id="search" type="text" placeholder="Szukaj" oninput="applyFilters()">
-        <span class="tip-count" id="tip-count"></span>
-        <button class="btn btn-primary" style="white-space:nowrap;flex-shrink:0;" onclick="openModal()">+ Zgłoś tip</button>
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="search" type="text" placeholder="Szukaj" oninput="applyFilters()">
+        </div>
+        
+        <button class="btn btn-primary" style="white-space:nowrap;flex-shrink:0;margin-left:auto;" onclick="openModal()">+ Zgłoś tip</button>
       </div>
       <div id="tips-list"><div class="empty"><div class="spinner"></div></div></div>
     </div>
@@ -321,6 +378,7 @@ async function loadTips() {
   } catch(e) { allTips = []; }
   renderSidebar();
   applyFilters();
+  updateFooter();
 }
 
 window.applyFilters = function() {
@@ -332,7 +390,7 @@ window.applyFilters = function() {
   });
   const n = list.length;
   const label = n === 1 ? "tip" : (n >= 2 && n <= 4) ? "tipy" : "tipów";
-  document.getElementById("tip-count").textContent = n + " " + label;
+  const tc = document.getElementById("tip-count"); if (tc) tc.textContent = n + " " + label;
   if (!list.length) { document.getElementById("tips-list").innerHTML = '<div class="empty">Brak tipów dla tych kryteriów.</div>'; return; }
   document.getElementById("tips-list").innerHTML = list.map((t,i) => `
     <div class="tip-row" style="--tip-color:${getColor(t.cat)}">
@@ -524,8 +582,31 @@ function escH(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;
 function escQ(s) { return String(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
 function showFlash(el,msg,type) { el.textContent=msg; el.className="flash "+type; el.style.display="block"; }
 
+
+function updateFooter() {
+  const fc = document.getElementById("footer-count");
+  const fu = document.getElementById("footer-updated");
+  if (fc) { const n = allTips.length; fc.textContent = n + (n===1?" tip":n<=4?" tipy":" tipów") + " w bazie"; }
+  if (fu && allTips.length) {
+    const latest = allTips.reduce((a,b) => (a.createdAt?.seconds||0) > (b.createdAt?.seconds||0) ? a : b);
+    if (latest.createdAt?.seconds) {
+      const d = new Date(latest.createdAt.seconds*1000);
+      fu.textContent = "ostatnia aktualizacja " + d.toLocaleDateString("pl-PL", {day:"numeric",month:"long",year:"numeric"});
+    }
+  }
+}
 loadTips();
 showView("tips");
 </script>
+
+<footer id="site-footer">
+  <div id="footer-inner">
+    <span id="footer-count"></span>
+    <span class="footer-sep">·</span>
+    <span id="footer-updated"></span>
+    <span class="footer-sep">·</span>
+    🇵🇱 POLSKA GUROM &nbsp;·&nbsp; <a href="https://discord.gg/plg" target="_blank">Discord PLG ↗</a> <span class="footer-sep">·</span> <span title="Serwer #1">IP: 83.168.94.44:2001</span>
+  </div>
+</footer>
 </body>
 </html>
