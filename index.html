@@ -183,9 +183,7 @@ button:hover { opacity: 0.85; }
 </div>
 
 <script type="module">
-// ============================================================
-// FIREBASE CONFIG — wklej swoją konfigurację z Firebase Console
-// ============================================================
+// FB config
 const firebaseConfig = {
   apiKey:            "AIzaSyAhVxl26yAWahrnHqchpDesW2A5Ez0d_2A",
   authDomain:        "arma-protips.firebaseapp.com",
@@ -194,7 +192,6 @@ const firebaseConfig = {
   messagingSenderId: "963501056767",
   appId:             "1:963501056767:web:be952939e52592729722ca"
 };
-// ============================================================
 
 import { initializeApp }                                                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -361,7 +358,7 @@ async function renderAdmin() {
   const pending = proposals.filter(p => p.status==="pending");
   document.getElementById("pending-badge").textContent = pending.length ? `(${pending.length})` : "";
 
-  // propozycje
+  // propozycje, pewnie do reworka
   const pdiv = document.getElementById("tab-proposals");
   if (!pending.length) {
     pdiv.innerHTML = '<div class="empty" style="padding:40px 0">Brak nowych propozycji</div>';
