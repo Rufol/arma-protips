@@ -101,6 +101,10 @@ button:hover { opacity: 0.85; }
 .tip-edit-row textarea { margin-bottom: 6px; }
 .tip-edit-row .edit-actions { display: flex; gap: 6px; align-items: center; }
 .tip-edit-row select { width: auto; font-size: 12px; padding: 4px 8px; }
+.admin-cat-filter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.admin-cat-filter button { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 4px 12px; font-size: 12px; border-radius: 999px; }
+.admin-cat-filter button:hover { color: var(--text); border-color: var(--border2); opacity: 1; }
+.admin-cat-filter button.active { color: var(--text); border-color: var(--border2); background: var(--surface); }
 
 @media (max-width: 640px) {
   #sidebar { display: none; }
@@ -250,7 +254,8 @@ let allTips     = [];
 let proposals   = [];
 let selCat      = "all";
 let currentUser = null;
-let editingTipId = null;
+let editingTipId  = null;
+let adminSelCat   = "all";
 
 window.showView = function(v) {
   document.getElementById("tips-view").style.display = v === "tips" ? "" : "none";
@@ -377,8 +382,13 @@ async function renderAdmin() {
 
   // wszystkie tipy
   const adiv = document.getElementById("tab-all-tips");
-  adiv.innerHTML = `<p class="section-title">${allTips.length} tipów na liście</p>` +
-    allTips.map(t => editingTipId === t.id ? `
+  const visibleTips = adminSelCat === "all" ? allTips : allTips.filter(t => t.cat === adminSelCat);
+  const filterBar = `<div class="admin-cat-filter">
+    <button class="${adminSelCat==='all'?'active':''}" onclick="setAdminCat('all')">Wszystkie (${allTips.length})</button>
+    ${CATS.map(c => { const n = allTips.filter(t=>t.cat===c).length; return n ? `<button class="${adminSelCat===c?'active':''}" onclick="setAdminCat('${escQ(c)}')" style="${adminSelCat===c?`border-color:${getColor(c)};color:${getColor(c)}`:''}">` + c + ` (${n})</button>` : ''; }).join("")}
+  </div>`;
+  adiv.innerHTML = filterBar + `<p class="section-title">${visibleTips.length} tipów</p>` +
+    visibleTips.map(t => editingTipId === t.id ? `
       <div class="tip-edit-row">
         <textarea id="edit-text-${t.id}" rows="2" style="width:100%">${escH(t.text)}</textarea>
         <div class="edit-actions">
@@ -420,8 +430,9 @@ window.deleteTip = async function(id) {
   renderAdmin();
 };
 
-window.startEditTip = function(id) { editingTipId = id; renderAdmin(); };
+window.startEditTip  = function(id) { editingTipId = id; renderAdmin(); };
 window.cancelEditTip = function() { editingTipId = null; renderAdmin(); };
+window.setAdminCat   = function(c) { adminSelCat = c; editingTipId = null; renderAdmin(); };
 window.saveTip = async function(id) {
   const text = document.getElementById("edit-text-"+id)?.value.trim();
   const cat  = document.getElementById("edit-cat-"+id)?.value;
