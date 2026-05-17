@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arma Reforger — Pro-tipy</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --border2: #444c56;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --accent: #3fb950;
+  --accent-dim: #1a3a20;
+  --danger: #f85149;
+  --danger-dim: #3d1a1a;
+  --warn: #e3b341;
+  --warn-dim: #3d2e0a;
+  --info: #58a6ff;
+  --info-dim: #0d2040;
+  --radius: 6px;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+input, textarea, select { font-family: var(--font-sans); font-size: 13px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 10px; width: 100%; transition: border-color 0.15s; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--border2); }
+textarea { resize: vertical; }
+button { font-family: var(--font-sans); cursor: pointer; font-size: 13px; border-radius: var(--radius); border: none; transition: opacity 0.15s, background 0.15s; }
+button:hover { opacity: 0.85; }
+.btn { padding: 8px 16px; font-weight: 500; }
+.btn-primary { background: var(--accent); color: #0d1117; }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text); }
+.btn-ghost:hover { background: var(--surface2); opacity: 1; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+
+/* Layout */
+#header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 24px; height: 52px; position: sticky; top: 0; z-index: 100; }
+#header h1 { font-family: var(--font-mono); font-size: 15px; color: var(--accent); letter-spacing: 0.05em; white-space: nowrap; }
+#header h1 span { color: var(--muted); }
+#nav { display: flex; gap: 4px; margin-left: auto; }
+#nav button { background: transparent; color: var(--muted); padding: 6px 14px; border: 1px solid transparent; border-radius: var(--radius); font-size: 13px; }
+#nav button.active, #nav button:hover { color: var(--text); border-color: var(--border); background: var(--surface2); }
+#nav button.active { color: var(--accent); border-color: var(--accent-dim); }
+
+#main-layout { display: flex; max-width: 1100px; margin: 0 auto; min-height: calc(100vh - 52px); }
+
+/* Sidebar */
+#sidebar { width: 200px; min-width: 200px; border-right: 1px solid var(--border); padding: 16px 0; }
+.sidebar-label { font-size: 10px; font-weight: 500; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; padding: 0 16px 8px; }
+.cat-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; cursor: pointer; color: var(--muted); font-size: 13px; border-left: 2px solid transparent; transition: all 0.1s; }
+.cat-item:hover { color: var(--text); background: var(--surface2); }
+.cat-item.active { color: var(--text); background: var(--surface2); border-left-color: var(--accent); }
+.cat-item .cnt { font-size: 11px; color: var(--muted); }
+
+/* Content */
+#content { flex: 1; padding: 20px 24px; min-width: 0; }
+
+/* Toolbar */
+#toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
+#search { flex: 1; max-width: 360px; }
+#toolbar .tip-count { font-size: 12px; color: var(--muted); margin-left: auto; }
+#propose-btn { white-space: nowrap; }
+
+/* Tips list */
+.tip-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.tip-row:last-child { border-bottom: none; }
+.tip-num { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-width: 26px; padding-top: 2px; text-align: right; }
+.tip-text { flex: 1; font-size: 13px; line-height: 1.6; }
+.cat-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; font-weight: 500; }
+.empty { text-align: center; color: var(--muted); padding: 60px 20px; font-size: 13px; }
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Modal */
+#modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 200; align-items: center; justify-content: center; }
+#modal-bg.open { display: flex; }
+#modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: min(540px, calc(100vw - 40px)); padding: 24px; }
+#modal h2 { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+#modal .sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+.flash { font-size: 12px; padding: 8px 12px; border-radius: var(--radius); margin-top: 10px; }
+.flash.ok { background: var(--accent-dim); color: var(--accent); }
+.flash.err { background: var(--danger-dim); color: var(--danger); }
+
+/* Admin panel */
+#admin-view { display: none; max-width: 1100px; margin: 0 auto; padding: 20px 24px; }
+#admin-view.open { display: block; }
+#login-box { max-width: 340px; margin: 60px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; }
+#login-box h2 { font-size: 15px; margin-bottom: 20px; font-family: var(--font-mono); color: var(--accent); }
+#admin-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+#admin-tabs button { background: transparent; color: var(--muted); padding: 8px 16px; border: none; border-bottom: 2px solid transparent; font-size: 13px; }
+#admin-tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+.proposal-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
+.proposal-card .meta { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.proposal-card .ptxt { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+.proposal-card .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.proposal-card select { width: auto; font-size: 12px; padding: 4px 8px; }
+.badge-pending { background: var(--warn-dim); color: var(--warn); }
+.badge-ok { background: var(--accent-dim); color: var(--accent); }
+.badge-rej { background: var(--danger-dim); color: var(--danger); }
+.section-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; color: var(--muted); text-transform: uppercase; font-family: var(--font-mono); letter-spacing: .08em; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  #sidebar { display: none; }
+  #main-layout { flex-direction: column; }
+  #header h1 span { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>ARMA REFORGER <span>// pro-tipy</span></h1>
+  <nav id="nav">
+    <button class="active" onclick="showView('tips')">Tipy</button>
+    <button onclick="showView('admin')" id="admin-nav-btn">Admin</button>
+  </nav>
+</div>
+
+<!-- TIPS VIEW -->
+<div id="tips-view">
+  <div id="main-layout">
+    <div id="sidebar">
+      <p class="sidebar-label">Kategorie</p>
+      <div id="cat-list"></div>
+    </div>
+    <div id="content">
+      <div id="toolbar">
+        <input id="search" type="text" placeholder="Szukaj tipu..." oninput="applyFilters()">
+        <span class="tip-count" id="tip-count"></span>
+        <button class="btn btn-primary" id="propose-btn" onclick="openModal()">+ Zgłoś tipa</button>
+      </div>
+      <div id="tips-list"><div class="empty"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div id="admin-view">
+  <div id="login-box" id="login-section">
+    <h2>// ADMIN</h2>
+    <div class="field"><label>Email</label><input type="email" id="email-inp" placeholder="admin@email.com"></div>
+    <div class="field"><label>Hasło</label><input type="password" id="pass-inp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Zaloguj</button>
+    <div id="login-err" class="flash err" style="display:none"></div>
+  </div>
+  <div id="admin-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h2 style="font-family:var(--font-mono);color:var(--accent);font-size:15px;">// PANEL ADMINA</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-ghost btn-sm" onclick="seedInitialTips()" title="Jednorazowe ładowanie tipów startowych">Seed tipów</button>
+        <button class="btn btn-ghost btn-sm" onclick="doLogout()">Wyloguj</button>
+      </div>
+    </div>
+    <div id="admin-tabs">
+      <button class="active" onclick="showAdminTab('proposals')">Propozycje <span id="pending-badge"></span></button>
+      <button onclick="showAdminTab('all-tips')">Wszystkie tipy</button>
+    </div>
+    <div id="tab-proposals"></div>
+    <div id="tab-all-tips" style="display:none"></div>
+  </div>
+</div>
+
+<!-- MODAL: zgłoś tipa -->
+<div id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div id="modal">
+    <h2>Zgłoś propozycję tipu</h2>
+    <p class="sub">Twoja propozycja trafi do admina do weryfikacji. Zaakceptowane tipy pojawią się na liście.</p>
+    <div class="field"><label>Treść tipu *</label><textarea id="m-text" rows="3" placeholder="Opisz tipa..."></textarea></div>
+    <div class="field"><label>Sugerowana kategoria</label>
+      <select id="m-cat">
+        <option value="">— wybierz —</option>
+      </select>
+    </div>
+    <div class="field"><label>Twój nick (opcjonalnie)</label><input type="text" id="m-nick" placeholder="np. Kowalski123"></div>
+    <div id="modal-flash" style="display:none"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Anuluj</button>
+      <button class="btn btn-primary" onclick="submitProposal()">Wyślij</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// ============================================================
+// FIREBASE CONFIG — wklej swoją konfigurację z Firebase Console
+// ============================================================
+const firebaseConfig = {
+
+  apiKey: "AIzaSyAhVxl26yAWahrnHqchpDesW2A5Ez0d_2A",
+
+  authDomain: "arma-protips.firebaseapp.com",
+
+  projectId: "arma-protips",
+
+  storageBucket: "arma-protips.firebasestorage.app",
+
+  messagingSenderId: "963501056767",
+
+  appId: "1:963501056767:web:be952939e52592729722ca",
+
+  measurementId: "G-DQ91NNNL0T"
+
+};
+
+// ============================================================
+
+import { initializeApp }                                       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app  = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ─── DANE ────────────────────────────────────────────────────
+const CATS = ["Kamuflaż","Taktyka","Radio & Komunikacja","Walka","Medyk","Logistyka","Pojazdy","Sprzęt","Interfejs & Ustawienia"];
+const CAT_COLORS = {
+  "Kamuflaż":"#3fb950","Taktyka":"#f0883e","Radio & Komunikacja":"#58a6ff",
+  "Walka":"#f85149","Medyk":"#7ee787","Logistyka":"#e3b341",
+  "Pojazdy":"#bc8cff","Sprzęt":"#8b949e","Interfejs & Ustawienia":"#ff7b72"
+};
+const INITIAL_TIPS = [
+  {text:"Ruch to twój główny wróg, obojętnie na jakim dystansie grasz",cat:"Taktyka"},
+  {text:"Kamuflaż ma znaczenie, potestuj sobie z kumplem w którym najlepiej się zlewasz z krzakami",cat:"Kamuflaż"},
+  {text:"Czarne kamo to nie kamo, jesteś fragiem",cat:"Kamuflaż"},
+  {text:"Kamo ciemnieje podczas deszczu",cat:"Kamuflaż"},
+  {text:"Krzak w słońcu jest jaśniejszy niż krzak w cieniu, dobieraj pod swoje kamo",cat:"Kamuflaż"},
+  {text:"Jak włączasz nokto to zdejmij okulary, światło z nokto się od nich odbija i bardziej Cię widać",cat:"Kamuflaż"},
+  {text:"Wchodzisz na wieżę kościoła? Jesteś fragiem",cat:"Taktyka"},
+  {text:"Wchodzisz na ATC? Jesteś fragiem",cat:"Taktyka"},
+  {text:"Wchodzisz na hesco boxy? Jesteś fragiem",cat:"Taktyka"},
+  {text:"Biegasz na górze main tenta/armory bo przecież nikogo nie ma? Oczywiście, że ktoś jest, jesteś fragiem",cat:"Taktyka"},
+  {text:"Zakładając ten największy placak upewniasz się, że nie będzie Cię widać dopiero jak dasz alt+f4",cat:"Kamuflaż"},
+  {text:"Gadając na radiu (capslock) słychać Cię w okręgu około 30m jakbyś gadał na proxy",cat:"Radio & Komunikacja"},
+  {text:"Gadasz na radiu/proxy podchodząc punkt? Jesteś fragiem",cat:"Radio & Komunikacja"},
+  {text:"Większość krzaków ma liście które robią się pół-przezroczyste jak przytkniesz do nich głowę — przez taki liść widać przez smoke'a",cat:"Kamuflaż"},
+  {text:"Krzaki się ruszają jak ktoś się w nich kręci",cat:"Kamuflaż"},
+  {text:"Jak siedzisz w krzaku rozglądaj się trzymając alt, nie kręć się całym ciałem bo punkt o krzakach",cat:"Taktyka"},
+  {text:"Chcesz zrestartować gierkę ale jest kolejka? Wyłącz kartę sieciową na chwilę lub odłącz kabel od neta, wejdziesz bez kolejki",cat:"Interfejs & Ustawienia"},
+  {text:"Ruskie granaty wydają wyraźny klik przy rzucaniu, natowskie nie",cat:"Walka"},
+  {text:"W opcjach w zakładce coalition squad interface można ustawić żeby nametagi wyświetlały się na 1000m (500% normalnej wartości) jak patrzysz przez scope'a",cat:"Interfejs & Ustawienia"},
+  {text:"Do standardowej walki z piechotą używaj zawsze ammo AP, nie FMJ, nie sniper, nie tracer — AP",cat:"Walka"},
+  {text:"Apteczka to mały sklepik z medami — otwierasz scroll klikiem",cat:"Medyk"},
+  {text:"Jak masz apteczkę to nie pakuj osobno do plecaka 5 soli, 14 bandaży i 23 morfin, bo apteczka to już ma",cat:"Medyk"},
+  {text:"Punktów na bazie gdzie ludzie się respią zazwyczaj jest dużo więcej niż sam main tent — main tent, obok pod daszkiem, spawn ciężkich pojazdów, namiot medyczny, bunkry z worków i pewnie jeszcze kilka",cat:"Logistyka"},
+  {text:"Medów używa się szybciej korzystając z menu ctrl+H",cat:"Medyk"},
+  {text:"Możesz się leczyć apteczką sam ale musisz być w pojeździe",cat:"Medyk"},
+  {text:"Ukradziona przeciwnikom ciężarówka z suplami daje normalnie expa przy wyładunku",cat:"Logistyka"},
+  {text:"Wiozłeś supple i umarłeś? Wróć po trucka, przy wyładunku normalnie dostaniesz exp",cat:"Logistyka"},
+  {text:"Dostaniesz więcej expa jak wyładujesz supple na bazie, która ma połączenie z wrogą bazą",cat:"Logistyka"},
+  {text:"Możesz ładować/rozładowywać supple bez wychodzenia z pojazdu — podjedź bardzo blisko tabliczki przy punkcie załadunku i po naciśnięciu tab robisz drag&drop",cat:"Logistyka"},
+  {text:"Mobilna PLotka jest od szeregowca",cat:"Logistyka"},
+  {text:"Noś ze sobą RPG, przynajmniej jednorazówkę",cat:"Sprzęt"},
+  {text:"Nie trzymaj radia w pouchach bo widać wtedy antenkę",cat:"Kamuflaż"},
+  {text:"RPGi mają backblasta — jak strzelasz to patrz czy nie ma za Tobą ziomka",cat:"Walka"},
+  {text:"Helką bez tylnego rotora normalnie da się latać, nabierz prędkości",cat:"Pojazdy"},
+  {text:"Nie każdy scope będzie działał poprawnie z każdą bronią, czytaj opisy, długość lufy i kaliber mają znaczenie",cat:"Sprzęt"},
+  {text:"Dobijaj przeciwników",cat:"Walka"},
+  {text:"Kolor nicka zmienisz naciskając HOME (jak jesteś SLem to klikasz P i myszką na swój nick)",cat:"Interfejs & Ustawienia"},
+];
+
+// ─── STAN ─────────────────────────────────────────────────────
+let allTips    = [];
+let proposals  = [];
+let selCat     = "all";
+let searchVal  = "";
+let currentUser = null;
+
+// ─── WIDOKI ───────────────────────────────────────────────────
+window.showView = function(v) {
+  document.getElementById("tips-view").style.display  = v === "tips"  ? "" : "none";
+  document.getElementById("admin-view").classList.toggle("open", v === "admin");
+  document.querySelectorAll("#nav button").forEach((b,i) => b.classList.toggle("active", (i===0&&v==="tips")||(i===1&&v==="admin")));
+  if (v === "admin") renderAdmin();
+};
+
+// ─── KATEGORIE ────────────────────────────────────────────────
+function renderSidebar() {
+  const counts = {};
+  CATS.forEach(c => counts[c] = 0);
+  allTips.forEach(t => { if (counts[t.cat] !== undefined) counts[t.cat]++; });
+  const total = allTips.length;
+  let html = `<div class="cat-item ${selCat==='all'?'active':''}" onclick="setCat('all')"><span>Wszystkie</span><span class="cnt">${total}</span></div>`;
+  CATS.forEach(c => {
+    html += `<div class="cat-item ${selCat===c?'active':''}" onclick="setCat('${escQ(c)}')" style="border-left-color:${selCat===c?getColor(c):'transparent'}"><span>${c}</span><span class="cnt">${counts[c]||0}</span></div>`;
+  });
+  document.getElementById("cat-list").innerHTML = html;
+
+  const mcat = document.getElementById("m-cat");
+  if (mcat && mcat.options.length <= 1) {
+    CATS.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; mcat.appendChild(o); });
+  }
+}
+
+window.setCat = function(c) { selCat = c; renderSidebar(); applyFilters(); };
+
+function getColor(c) { return CAT_COLORS[c] || "#8b949e"; }
+
+// ─── TIPY ─────────────────────────────────────────────────────
+async function loadTips() {
+  try {
+    const snap = await getDocs(query(collection(db,"tips"), orderBy("createdAt","asc")));
+    allTips = snap.docs.map(d => ({id:d.id,...d.data()}));
+  } catch(e) { allTips = []; }
+  renderSidebar();
+  applyFilters();
+}
+
+window.applyFilters = function() {
+  const s = (document.getElementById("search")?.value || "").toLowerCase();
+  const list = allTips.filter(t => {
+    const mc = selCat === "all" || t.cat === selCat;
+    const ms = !s || t.text.toLowerCase().includes(s);
+    return mc && ms;
+  });
+  document.getElementById("tip-count").textContent = list.length + " tipów";
+  if (!list.length) { document.getElementById("tips-list").innerHTML = '<div class="empty">Brak tipów dla tych kryteriów.</div>'; return; }
+  document.getElementById("tips-list").innerHTML = list.map((t,i) => `
+    <div class="tip-row">
+      <span class="tip-num">${i+1}</span>
+      <span class="tip-text">${escH(t.text)}</span>
+      ${selCat==="all"?`<span class="cat-badge" style="background:${getColor(t.cat)}22;color:${getColor(t.cat)};border:1px solid ${getColor(t.cat)}44">${t.cat}</span>`:""}
+    </div>`).join("");
+};
+
+// ─── MODAL ────────────────────────────────────────────────────
+window.openModal  = function() { document.getElementById("modal-bg").classList.add("open"); document.getElementById("m-text").focus(); };
+window.closeModal = function() { document.getElementById("modal-bg").classList.remove("open"); document.getElementById("m-text").value=""; document.getElementById("m-nick").value=""; document.getElementById("m-cat").value=""; document.getElementById("modal-flash").style.display="none"; };
+
+window.submitProposal = async function() {
+  const text = document.getElementById("m-text").value.trim();
+  const cat  = document.getElementById("m-cat").value;
+  const nick = document.getElementById("m-nick").value.trim();
+  const flash = document.getElementById("modal-flash");
+  if (!text) { showFlash(flash,"Wpisz treść tipu.","err"); return; }
+  try {
+    await addDoc(collection(db,"proposals"), { text, suggestedCat: cat||"", nick: nick||"anonim", status:"pending", submittedAt: serverTimestamp() });
+    showFlash(flash,"Dzięki! Propozycja została wysłana do admina.","ok");
+    setTimeout(closeModal, 2000);
+  } catch(e) { showFlash(flash,"Błąd: "+e.message,"err"); }
+};
+
+// ─── ADMIN ────────────────────────────────────────────────────
+window.doLogin = async function() {
+  const email = document.getElementById("email-inp").value;
+  const pass  = document.getElementById("pass-inp").value;
+  const err   = document.getElementById("login-err");
+  try { await signInWithEmailAndPassword(auth, email, pass); }
+  catch(e) { err.textContent = "Błąd logowania: "+e.message; err.style.display="block"; }
+};
+
+window.doLogout = async function() { await signOut(auth); };
+
+window.showAdminTab = function(t) {
+  document.querySelectorAll("#admin-tabs button").forEach((b,i) => b.classList.toggle("active",(i===0&&t==="proposals")||(i===1&&t==="all-tips")));
+  document.getElementById("tab-proposals").style.display = t==="proposals"?"":"none";
+  document.getElementById("tab-all-tips").style.display  = t==="all-tips"?"":"none";
+};
+
+async function loadProposals() {
+  const snap = await getDocs(query(collection(db,"proposals"), orderBy("submittedAt","desc")));
+  proposals = snap.docs.map(d => ({id:d.id,...d.data()}));
+}
+
+async function renderAdmin() {
+  const panel = document.getElementById("admin-panel");
+  const login = document.getElementById("login-box");
+  if (!currentUser) { panel.style.display="none"; login.style.display=""; return; }
+  panel.style.display=""; login.style.display="none";
+  await loadProposals();
+
+  const pending = proposals.filter(p => p.status==="pending");
+  document.getElementById("pending-badge").textContent = pending.length ? `(${pending.length})` : "";
+
+  // proposals tab
+  const pdiv = document.getElementById("tab-proposals");
+  if (!pending.length) { pdiv.innerHTML = '<div class="empty" style="padding:40px 0">Brak nowych propozycji</div>'; }
+  else {
+    pdiv.innerHTML = `<p class="section-title">${pending.length} oczekujących</p>` + pending.map(p => `
+      <div class="proposal-card" id="pc-${p.id}">
+        <div class="meta">od <strong>${escH(p.nick||"anonim")}</strong> &nbsp;|&nbsp; sugerowana kategoria: <strong>${escH(p.suggestedCat)||"—"}</strong></div>
+        <div class="ptxt">${escH(p.text)}</div>
+        <div class="actions">
+          <select id="sel-${p.id}" style="width:auto;font-size:12px;padding:4px 8px;">
+            ${CATS.map(c=>`<option value="${escH(c)}" ${c===(p.suggestedCat||CATS[0])?"selected":""}>${c}</option>`).join("")}
+          </select>
+          <button class="btn btn-sm btn-primary" onclick="approveProposal('${p.id}','${escQ(p.text)}')">Akceptuj</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectProposal('${p.id}')">Odrzuć</button>
+        </div>
+      </div>`).join("");
+  }
+
+  // all tips tab
+  const adiv = document.getElementById("tab-all-tips");
+  adiv.innerHTML = `<p class="section-title">${allTips.length} tipów na liście</p>` +
+    allTips.map(t => `
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="flex:1;font-size:13px">${escH(t.text)}</span>
+        <span class="cat-badge" style="background:${getColor(t.cat)}22;color:${getColor(t.cat)};border:1px solid ${getColor(t.cat)}44;flex-shrink:0">${t.cat}</span>
+        <button class="btn btn-sm" style="background:var(--danger-dim);color:var(--danger);flex-shrink:0" onclick="deleteTip('${t.id}')">Usuń</button>
+      </div>`).join("");
+}
+
+window.approveProposal = async function(id, text) {
+  const cat = document.getElementById("sel-"+id)?.value || CATS[0];
+  const batch = writeBatch(db);
+  batch.update(doc(db,"proposals",id), {status:"approved"});
+  batch.set(doc(collection(db,"tips")), {text, cat, createdAt: serverTimestamp()});
+  await batch.commit();
+  await loadTips();
+  renderAdmin();
+};
+
+window.rejectProposal = async function(id) {
+  await updateDoc(doc(db,"proposals",id), {status:"rejected"});
+  renderAdmin();
+};
+
+window.deleteTip = async function(id) {
+  if (!confirm("Usunąć ten tip?")) return;
+  await deleteDoc(doc(db,"tips",id));
+  await loadTips();
+  renderAdmin();
+};
+
+// ─── SEED ────────────────────────────────────────────────────
+window.seedInitialTips = async function() {
+  const snap = await getDocs(collection(db,"tips"));
+  if (snap.size > 0) { alert("Baza już zawiera tipy. Seed pominięty."); return; }
+  if (!confirm(`Dodać ${INITIAL_TIPS.length} startowych tipów do bazy?`)) return;
+  const batch = writeBatch(db);
+  INITIAL_TIPS.forEach(t => batch.set(doc(collection(db,"tips")), {text:t.text, cat:t.cat, createdAt:serverTimestamp()}));
+  await batch.commit();
+  await loadTips();
+  renderAdmin();
+  alert("Gotowe!");
+};
+
+// ─── AUTH ────────────────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  const adminView = document.getElementById("admin-view");
+  if (adminView.classList.contains("open")) renderAdmin();
+});
+
+// ─── UTILS ───────────────────────────────────────────────────
+function escH(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function escQ(s) { return String(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
+function showFlash(el,msg,type) { el.textContent=msg; el.className="flash "+type; el.style.display="block"; }
+
+// ─── INIT ────────────────────────────────────────────────────
+loadTips();
+showView("tips");
+</script>
+</body>
+</html>
