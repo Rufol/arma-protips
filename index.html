@@ -41,7 +41,6 @@ button:hover { opacity: 0.85; }
 .btn-danger { background: var(--danger); color: #fff; }
 .btn-sm { padding: 5px 12px; font-size: 12px; }
 
-/* Layout */
 #header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 24px; height: 52px; position: sticky; top: 0; z-index: 100; }
 #header h1 { font-family: var(--font-mono); font-size: 15px; color: var(--accent); letter-spacing: 0.05em; white-space: nowrap; }
 #header h1 span { color: var(--muted); }
@@ -52,7 +51,6 @@ button:hover { opacity: 0.85; }
 
 #main-layout { display: flex; max-width: 1100px; margin: 0 auto; min-height: calc(100vh - 52px); }
 
-/* Sidebar */
 #sidebar { width: 200px; min-width: 200px; border-right: 1px solid var(--border); padding: 16px 0; }
 .sidebar-label { font-size: 10px; font-weight: 500; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; padding: 0 16px 8px; }
 .cat-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; cursor: pointer; color: var(--muted); font-size: 13px; border-left: 2px solid transparent; transition: all 0.1s; }
@@ -60,16 +58,12 @@ button:hover { opacity: 0.85; }
 .cat-item.active { color: var(--text); background: var(--surface2); border-left-color: var(--accent); }
 .cat-item .cnt { font-size: 11px; color: var(--muted); }
 
-/* Content */
 #content { flex: 1; padding: 20px 24px; min-width: 0; }
 
-/* Toolbar */
 #toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; }
 #search { flex: 1; max-width: 360px; }
 #toolbar .tip-count { font-size: 12px; color: var(--muted); margin-left: auto; }
-#propose-btn { white-space: nowrap; }
 
-/* Tips list */
 .tip-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
 .tip-row:last-child { border-bottom: none; }
 .tip-num { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-width: 26px; padding-top: 2px; text-align: right; }
@@ -79,7 +73,6 @@ button:hover { opacity: 0.85; }
 .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Modal */
 #modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 200; align-items: center; justify-content: center; }
 #modal-bg.open { display: flex; }
 #modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: min(540px, calc(100vw - 40px)); padding: 24px; }
@@ -92,7 +85,6 @@ button:hover { opacity: 0.85; }
 .flash.ok { background: var(--accent-dim); color: var(--accent); }
 .flash.err { background: var(--danger-dim); color: var(--danger); }
 
-/* Admin panel */
 #admin-view { display: none; max-width: 1100px; margin: 0 auto; padding: 20px 24px; }
 #admin-view.open { display: block; }
 #login-box { max-width: 340px; margin: 60px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; }
@@ -104,13 +96,12 @@ button:hover { opacity: 0.85; }
 .proposal-card .meta { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
 .proposal-card .ptxt { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
 .proposal-card .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.proposal-card select { width: auto; font-size: 12px; padding: 4px 8px; }
-.badge-pending { background: var(--warn-dim); color: var(--warn); }
-.badge-ok { background: var(--accent-dim); color: var(--accent); }
-.badge-rej { background: var(--danger-dim); color: var(--danger); }
 .section-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; color: var(--muted); text-transform: uppercase; font-family: var(--font-mono); letter-spacing: .08em; }
+.tip-edit-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.tip-edit-row textarea { margin-bottom: 6px; }
+.tip-edit-row .edit-actions { display: flex; gap: 6px; align-items: center; }
+.tip-edit-row select { width: auto; font-size: 12px; padding: 4px 8px; }
 
-/* Responsive */
 @media (max-width: 640px) {
   #sidebar { display: none; }
   #main-layout { flex-direction: column; }
@@ -128,7 +119,6 @@ button:hover { opacity: 0.85; }
   </nav>
 </div>
 
-<!-- TIPS VIEW -->
 <div id="tips-view">
   <div id="main-layout">
     <div id="sidebar">
@@ -139,16 +129,15 @@ button:hover { opacity: 0.85; }
       <div id="toolbar">
         <input id="search" type="text" placeholder="Szukaj tipu..." oninput="applyFilters()">
         <span class="tip-count" id="tip-count"></span>
-        <button class="btn btn-primary" id="propose-btn" onclick="openModal()">+ Zgłoś tipa</button>
+        <button class="btn btn-primary" onclick="openModal()">+ Zgłoś tipa</button>
       </div>
       <div id="tips-list"><div class="empty"><div class="spinner"></div></div></div>
     </div>
   </div>
 </div>
 
-<!-- ADMIN VIEW -->
 <div id="admin-view">
-  <div id="login-box" id="login-section">
+  <div id="login-box">
     <h2>// ADMIN</h2>
     <div class="field"><label>Email</label><input type="email" id="email-inp" placeholder="admin@email.com"></div>
     <div class="field"><label>Hasło</label><input type="password" id="pass-inp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -159,7 +148,7 @@ button:hover { opacity: 0.85; }
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
       <h2 style="font-family:var(--font-mono);color:var(--accent);font-size:15px;">// PANEL ADMINA</h2>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn btn-ghost btn-sm" onclick="seedInitialTips()" title="Jednorazowe ładowanie tipów startowych">Seed tipów</button>
+        <button class="btn btn-ghost btn-sm" onclick="seedInitialTips()">Seed tipów</button>
         <button class="btn btn-ghost btn-sm" onclick="doLogout()">Wyloguj</button>
       </div>
     </div>
@@ -172,16 +161,13 @@ button:hover { opacity: 0.85; }
   </div>
 </div>
 
-<!-- MODAL: zgłoś tipa -->
 <div id="modal-bg" onclick="if(event.target===this)closeModal()">
   <div id="modal">
     <h2>Zgłoś propozycję tipu</h2>
     <p class="sub">Twoja propozycja trafi do admina do weryfikacji. Zaakceptowane tipy pojawią się na liście.</p>
     <div class="field"><label>Treść tipu *</label><textarea id="m-text" rows="3" placeholder="Opisz tipa..."></textarea></div>
     <div class="field"><label>Sugerowana kategoria</label>
-      <select id="m-cat">
-        <option value="">— wybierz —</option>
-      </select>
+      <select id="m-cat"><option value="">— wybierz —</option></select>
     </div>
     <div class="field"><label>Twój nick (opcjonalnie)</label><input type="text" id="m-nick" placeholder="np. Kowalski123"></div>
     <div id="modal-flash" style="display:none"></div>
@@ -197,34 +183,23 @@ button:hover { opacity: 0.85; }
 // FIREBASE CONFIG — wklej swoją konfigurację z Firebase Console
 // ============================================================
 const firebaseConfig = {
-
-  apiKey: "AIzaSyAhVxl26yAWahrnHqchpDesW2A5Ez0d_2A",
-
-  authDomain: "arma-protips.firebaseapp.com",
-
-  projectId: "arma-protips",
-
-  storageBucket: "arma-protips.firebasestorage.app",
-
+  apiKey:            "AIzaSyAhVxl26yAWahrnHqchpDesW2A5Ez0d_2A",
+  authDomain:        "arma-protips.firebaseapp.com",
+  projectId:         "arma-protips",
+  storageBucket:     "arma-protips.firebasestorage.app",
   messagingSenderId: "963501056767",
-
-  appId: "1:963501056767:web:be952939e52592729722ca",
-
-  measurementId: "G-DQ91NNNL0T"
-
+  appId:             "1:963501056767:web:be952939e52592729722ca"
 };
-
 // ============================================================
 
-import { initializeApp }                                       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where, orderBy, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp }                                                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-// ─── DANE ────────────────────────────────────────────────────
 const CATS = ["Kamuflaż","Taktyka","Radio & Komunikacja","Walka","Medyk","Logistyka","Pojazdy","Sprzęt","Interfejs & Ustawienia"];
 const CAT_COLORS = {
   "Kamuflaż":"#3fb950","Taktyka":"#f0883e","Radio & Komunikacja":"#58a6ff",
@@ -271,33 +246,28 @@ const INITIAL_TIPS = [
   {text:"Kolor nicka zmienisz naciskając HOME (jak jesteś SLem to klikasz P i myszką na swój nick)",cat:"Interfejs & Ustawienia"},
 ];
 
-// ─── STAN ─────────────────────────────────────────────────────
-let allTips    = [];
-let proposals  = [];
-let selCat     = "all";
-let searchVal  = "";
+let allTips     = [];
+let proposals   = [];
+let selCat      = "all";
 let currentUser = null;
+let editingTipId = null;
 
-// ─── WIDOKI ───────────────────────────────────────────────────
 window.showView = function(v) {
-  document.getElementById("tips-view").style.display  = v === "tips"  ? "" : "none";
+  document.getElementById("tips-view").style.display = v === "tips" ? "" : "none";
   document.getElementById("admin-view").classList.toggle("open", v === "admin");
-  document.querySelectorAll("#nav button").forEach((b,i) => b.classList.toggle("active", (i===0&&v==="tips")||(i===1&&v==="admin")));
+  document.querySelectorAll("#nav button").forEach((b,i) => b.classList.toggle("active",(i===0&&v==="tips")||(i===1&&v==="admin")));
   if (v === "admin") renderAdmin();
 };
 
-// ─── KATEGORIE ────────────────────────────────────────────────
 function renderSidebar() {
   const counts = {};
   CATS.forEach(c => counts[c] = 0);
   allTips.forEach(t => { if (counts[t.cat] !== undefined) counts[t.cat]++; });
-  const total = allTips.length;
-  let html = `<div class="cat-item ${selCat==='all'?'active':''}" onclick="setCat('all')"><span>Wszystkie</span><span class="cnt">${total}</span></div>`;
+  let html = `<div class="cat-item ${selCat==='all'?'active':''}" onclick="setCat('all')"><span>Wszystkie</span><span class="cnt">${allTips.length}</span></div>`;
   CATS.forEach(c => {
     html += `<div class="cat-item ${selCat===c?'active':''}" onclick="setCat('${escQ(c)}')" style="border-left-color:${selCat===c?getColor(c):'transparent'}"><span>${c}</span><span class="cnt">${counts[c]||0}</span></div>`;
   });
   document.getElementById("cat-list").innerHTML = html;
-
   const mcat = document.getElementById("m-cat");
   if (mcat && mcat.options.length <= 1) {
     CATS.forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c; mcat.appendChild(o); });
@@ -305,10 +275,8 @@ function renderSidebar() {
 }
 
 window.setCat = function(c) { selCat = c; renderSidebar(); applyFilters(); };
-
 function getColor(c) { return CAT_COLORS[c] || "#8b949e"; }
 
-// ─── TIPY ─────────────────────────────────────────────────────
 async function loadTips() {
   try {
     const snap = await getDocs(query(collection(db,"tips"), orderBy("createdAt","asc")));
@@ -335,14 +303,19 @@ window.applyFilters = function() {
     </div>`).join("");
 };
 
-// ─── MODAL ────────────────────────────────────────────────────
 window.openModal  = function() { document.getElementById("modal-bg").classList.add("open"); document.getElementById("m-text").focus(); };
-window.closeModal = function() { document.getElementById("modal-bg").classList.remove("open"); document.getElementById("m-text").value=""; document.getElementById("m-nick").value=""; document.getElementById("m-cat").value=""; document.getElementById("modal-flash").style.display="none"; };
+window.closeModal = function() {
+  document.getElementById("modal-bg").classList.remove("open");
+  document.getElementById("m-text").value = "";
+  document.getElementById("m-nick").value = "";
+  document.getElementById("m-cat").value = "";
+  document.getElementById("modal-flash").style.display = "none";
+};
 
 window.submitProposal = async function() {
-  const text = document.getElementById("m-text").value.trim();
-  const cat  = document.getElementById("m-cat").value;
-  const nick = document.getElementById("m-nick").value.trim();
+  const text  = document.getElementById("m-text").value.trim();
+  const cat   = document.getElementById("m-cat").value;
+  const nick  = document.getElementById("m-nick").value.trim();
   const flash = document.getElementById("modal-flash");
   if (!text) { showFlash(flash,"Wpisz treść tipu.","err"); return; }
   try {
@@ -352,7 +325,6 @@ window.submitProposal = async function() {
   } catch(e) { showFlash(flash,"Błąd: "+e.message,"err"); }
 };
 
-// ─── ADMIN ────────────────────────────────────────────────────
 window.doLogin = async function() {
   const email = document.getElementById("email-inp").value;
   const pass  = document.getElementById("pass-inp").value;
@@ -365,8 +337,8 @@ window.doLogout = async function() { await signOut(auth); };
 
 window.showAdminTab = function(t) {
   document.querySelectorAll("#admin-tabs button").forEach((b,i) => b.classList.toggle("active",(i===0&&t==="proposals")||(i===1&&t==="all-tips")));
-  document.getElementById("tab-proposals").style.display = t==="proposals"?"":"none";
-  document.getElementById("tab-all-tips").style.display  = t==="all-tips"?"":"none";
+  document.getElementById("tab-proposals").style.display  = t==="proposals" ? "" : "none";
+  document.getElementById("tab-all-tips").style.display   = t==="all-tips"  ? "" : "none";
 };
 
 async function loadProposals() {
@@ -384,10 +356,11 @@ async function renderAdmin() {
   const pending = proposals.filter(p => p.status==="pending");
   document.getElementById("pending-badge").textContent = pending.length ? `(${pending.length})` : "";
 
-  // proposals tab
+  // propozycje
   const pdiv = document.getElementById("tab-proposals");
-  if (!pending.length) { pdiv.innerHTML = '<div class="empty" style="padding:40px 0">Brak nowych propozycji</div>'; }
-  else {
+  if (!pending.length) {
+    pdiv.innerHTML = '<div class="empty" style="padding:40px 0">Brak nowych propozycji</div>';
+  } else {
     pdiv.innerHTML = `<p class="section-title">${pending.length} oczekujących</p>` + pending.map(p => `
       <div class="proposal-card" id="pc-${p.id}">
         <div class="meta">od <strong>${escH(p.nick||"anonim")}</strong> &nbsp;|&nbsp; sugerowana kategoria: <strong>${escH(p.suggestedCat)||"—"}</strong></div>
@@ -397,18 +370,29 @@ async function renderAdmin() {
             ${CATS.map(c=>`<option value="${escH(c)}" ${c===(p.suggestedCat||CATS[0])?"selected":""}>${c}</option>`).join("")}
           </select>
           <button class="btn btn-sm btn-primary" onclick="approveProposal('${p.id}','${escQ(p.text)}')">Akceptuj</button>
-          <button class="btn btn-sm btn-danger" onclick="rejectProposal('${p.id}')">Odrzuć</button>
+          <button class="btn btn-sm btn-danger"  onclick="rejectProposal('${p.id}')">Odrzuć</button>
         </div>
       </div>`).join("");
   }
 
-  // all tips tab
+  // wszystkie tipy
   const adiv = document.getElementById("tab-all-tips");
   adiv.innerHTML = `<p class="section-title">${allTips.length} tipów na liście</p>` +
-    allTips.map(t => `
+    allTips.map(t => editingTipId === t.id ? `
+      <div class="tip-edit-row">
+        <textarea id="edit-text-${t.id}" rows="2" style="width:100%">${escH(t.text)}</textarea>
+        <div class="edit-actions">
+          <select id="edit-cat-${t.id}">
+            ${CATS.map(c=>`<option value="${escH(c)}" ${c===t.cat?"selected":""}>${c}</option>`).join("")}
+          </select>
+          <button class="btn btn-sm btn-primary" onclick="saveTip('${t.id}')">Zapisz</button>
+          <button class="btn btn-sm btn-ghost"   onclick="cancelEditTip()">Anuluj</button>
+        </div>
+      </div>` : `
       <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);">
         <span style="flex:1;font-size:13px">${escH(t.text)}</span>
         <span class="cat-badge" style="background:${getColor(t.cat)}22;color:${getColor(t.cat)};border:1px solid ${getColor(t.cat)}44;flex-shrink:0">${t.cat}</span>
+        <button class="btn btn-sm btn-ghost"  style="flex-shrink:0" onclick="startEditTip('${t.id}')">Edytuj</button>
         <button class="btn btn-sm" style="background:var(--danger-dim);color:var(--danger);flex-shrink:0" onclick="deleteTip('${t.id}')">Usuń</button>
       </div>`).join("");
 }
@@ -431,11 +415,23 @@ window.rejectProposal = async function(id) {
 window.deleteTip = async function(id) {
   if (!confirm("Usunąć ten tip?")) return;
   await deleteDoc(doc(db,"tips",id));
+  editingTipId = null;
   await loadTips();
   renderAdmin();
 };
 
-// ─── SEED ────────────────────────────────────────────────────
+window.startEditTip = function(id) { editingTipId = id; renderAdmin(); };
+window.cancelEditTip = function() { editingTipId = null; renderAdmin(); };
+window.saveTip = async function(id) {
+  const text = document.getElementById("edit-text-"+id)?.value.trim();
+  const cat  = document.getElementById("edit-cat-"+id)?.value;
+  if (!text) return;
+  await updateDoc(doc(db,"tips",id), {text, cat});
+  editingTipId = null;
+  await loadTips();
+  renderAdmin();
+};
+
 window.seedInitialTips = async function() {
   const snap = await getDocs(collection(db,"tips"));
   if (snap.size > 0) { alert("Baza już zawiera tipy. Seed pominięty."); return; }
@@ -448,19 +444,15 @@ window.seedInitialTips = async function() {
   alert("Gotowe!");
 };
 
-// ─── AUTH ────────────────────────────────────────────────────
 onAuthStateChanged(auth, user => {
   currentUser = user;
-  const adminView = document.getElementById("admin-view");
-  if (adminView.classList.contains("open")) renderAdmin();
+  if (document.getElementById("admin-view").classList.contains("open")) renderAdmin();
 });
 
-// ─── UTILS ───────────────────────────────────────────────────
 function escH(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function escQ(s) { return String(s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;"); }
 function showFlash(el,msg,type) { el.textContent=msg; el.className="flash "+type; el.style.display="block"; }
 
-// ─── INIT ────────────────────────────────────────────────────
 loadTips();
 showView("tips");
 </script>
